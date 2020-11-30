@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <head>
+        <base href='/'>
+
+        <title>Home</title>
+        <meta name="author" content="Miro Manestar" />
+        <meta name="date" content="11-02-2020" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+        <link rel="stylesheet" href="assets/main.css">
+    </head>
+
+    <body onload="onFirstLoad()">
+        <header>
+            <a class="nav-link" role="button" onclick="loadContent('home')">Home</a>
+            <a class="nav-link" role="button" onclick="loadContent('about')">About</a>
+            <a class="nav-link" role="button" onclick="loadContent('steps')">Steps</a>
+            <a class="nav-link" role="button" onclick="loadContent('contact')">Contact</a>
+        </header>
+
+        <main role="main" class="container" id="page-content"></main>
+
+        <footer>Copyright 2020. Miro Manestar. All Rights Reserved.</footer>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="assets/main.js"></script>
+    </body>
+</html>
