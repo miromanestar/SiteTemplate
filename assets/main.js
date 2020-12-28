@@ -108,7 +108,7 @@ function insertBreadcrumbs(selection) {
 
                 breadcrumb += `${triangle} 
                     <li class="breadcrumb-item">
-                        <a role="button" class="hover-scale" onclick="loadContent('${ pathArr.slice(0, pathArr.length-1).join('/') }')">
+                        <a role="button" class="hover-scale" onclick="loadContent('${ pathArr.slice(0, i + 1).join('/') }')">
                             ${ pathArr[i].charAt(0).toUpperCase() + pathArr[i].slice(1) }
                         </a>
                     </li>`;
