@@ -1,5 +1,23 @@
+/*
+    Miro Manestar - 4/12/2021
+    A simple script for basic single page applications!
+*/
+
+// appendPageTitle is only effective if changePageTitle is true
+const changePageTitle = true;
+const appendPageTitle = true;
+
+const enableBreadcrumbs = false;
+const enableLightbox = true;
+
+// darkIcon only matters if enableThemeMode is true
+const enableThemeMode = false;
+const darkIcon = '';
+
+
 $(document).ready(function () {
-    colorScheme();
+    if (enableThemeMode)
+        colorScheme();
     stickyHeader();
 });
 
@@ -22,13 +40,27 @@ function onFirstLoad() {
     }
 }
 
+const origPageTitle = $('title').text();
 function loadContent(selection, state, changeState) {
     $('#page-content').fadeOut('fast', function () {
         $('#page-content').load(`${window.location.origin}/pages/${selection}`, function (response, status) {
             //$('.navbar-collapse').collapse('hide');
             if (status === 'success') {
-                //insertBreadcrumbs(selection);
+
+                if (enableBreadcrumbs)
+                    insertBreadcrumbs(selection);
                 loadPartials(insertLightbox); //Check for partials every time the page is reloaded, then finally run insertLightbox() when finished.
+
+                if (changePageTitle) {
+                    let pageTitle = $('#page-title').innerText || selection.split('/')[selection.split('/').length - 1];
+                    pageTitle = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
+
+                    if (appendPageTitle)
+                        $('title').text(origPageTitle + ' - ' + pageTitle);
+                    else
+                        $('title').text(pageTitle);
+                }
+
                 $('#page-content').fadeIn('fast', function() {
                     let event = new CustomEvent("page-loaded", {"detail": `Page ${ selection } finished loading`});
                     document.dispatchEvent(event);
@@ -91,8 +123,8 @@ function insertBreadcrumbs(selection) {
         breadcrumb = `<li class="breadcrumb-item"><a class="hover-scale" role="button" onclick="loadContent('home')">Home</a></li>`;
         for(let i = 0; i < pathArr.length; i++) {
             if(i == pathArr.length - 1) {
-                if($('#page-name').length) {
-                    breadcrumb += `${triangle} <li class="breadcrumb-item active">${ $('#page-name').text() }</li>`;
+                if($('#page-title').length) {
+                    breadcrumb += `${triangle} <li class="breadcrumb-item active">${ $('#page-title').text() }</li>`;
                 } else {
                     breadcrumb += `${triangle} <li class="breadcrumb-item active">${ pathArr[i].charAt(0).toUpperCase() + pathArr[i].slice(1) }</li>`;
                 }
@@ -100,7 +132,7 @@ function insertBreadcrumbs(selection) {
                 var pageName = '';
                 $.get(window.location.origin + '/pages/' + pathArr.slice(0, i + 1).join('/'), function(html) {
                     for(let i = 0 ; i < $(html).length; i++) {
-                        if($(html)[i].id === 'page-name') {
+                        if($(html)[i].id === 'page-title') {
                             pageName = $(html)[i].innerText;
                         }
                     }
@@ -156,6 +188,9 @@ function stickyHeader() {
 
 //Code to easily insert lightbox functionality into images
 function insertLightbox() {
+    if (!enableLightbox)
+        return;
+
     $('img').each(function () {
         if (!$(this).hasClass('logo-image') && !$(this).hasClass('no-lightbox')) {
             $(this).addClass('image');
@@ -165,9 +200,8 @@ function insertLightbox() {
 }
 
 function colorScheme() {
-
     //Switch favicon if light mode, since default is dark mode
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        document.getElementById('favicon').setAttribute('href', 'assets/icons/mm-dark.png');
+        document.getElementById('favicon').setAttribute('href', darkIcon);
     }
 }
