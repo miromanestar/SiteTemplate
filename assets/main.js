@@ -29,7 +29,10 @@ function loadContent(selection, state, changeState) {
             if (status === 'success') {
                 //insertBreadcrumbs(selection);
                 loadPartials(insertLightbox); //Check for partials every time the page is reloaded, then finally run insertLightbox() when finished.
-                $('#page-content').fadeIn('fast');
+                $('#page-content').fadeIn('fast', function() {
+                    let event = new CustomEvent("page-loaded", {"detail": `Page ${ selection } finished loading`});
+                    document.dispatchEvent(event);
+                });
             }
             if (status === 'error') {
                 loadContent('404'); //Possible infinite loop?
